@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.info.dao.MyInfoMapper">
+  	<select id="getMyInfoById" resultType="com.info.entity.MyInfo">
+  		select * from myinfo where id=#{0}
+  	</select>
+  	<select id="getMyInfo" resultType="com.info.entity.MyInfo">
+  		select * from myinfo
+  	</select>
+  	<insert id="insert" parameterType="com.info.entity.MyInfo">
+  		insert into myinfo(image,title,content,date) values(#{image},#{title},#{content},#{date})
+  	</insert>
+  	<update id="update" parameterType="com.info.entity.MyInfo">
+  		update myinfo set image=#{image},title=#{title},content=#{content},date=#{date} where id=#{id}
+  	</update>
+  </mapper>

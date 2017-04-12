@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 配置数据源   负责mybatis数据连接 -->
+	<bean id="dataSource" 
+	class="org.springframework.jdbc.datasource.SimpleDriverDataSource" 
+	p:driverClass="com.mysql.jdbc.Driver" 
+	p:url="jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf-8" 
+	p:username="root" p:password="accp"/>
+	
+	<!-- 创建sqlSessionFactorybean 接管传统mybatis框架初始化 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" 
+	p:dataSource-ref="dataSource" 
+	p:configLocation="classpath:mybatis-config.xml"/>
+
+	<!-- 创建事务管理bean -->
+	<bean id="transactionManager" 
+	class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
+	p:dataSource-ref="dataSource"/>
+	<!-- Spring支持注解的事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- 自动扫描mybatis中的*mapper.xml -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.info.dao"></property>
+	</bean>
+	<!-- spring扫描并实例化添加注解的java类 -->
+	<context:component-scan base-package="com">
+		<!-- 排除springMVC扫描并实例化过的bean -->
+		<context:exclude-filter type="regex" expression="com.info.controller"/>
+	</context:component-scan>
+	
+	
+</beans>
